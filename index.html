@@ -50,6 +50,7 @@
 
     if (users[uname] && users[uname] === pass) {
       localStorage.setItem('sessionUser', uname);
+      window.location.href = 'supa.html';
       checkLogin();
     } else {
       alert('Username atau password salah!');
