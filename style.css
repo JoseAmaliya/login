@@ -1,29 +1,28 @@
-
-
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  color: #1c1c1c;
-  background-color: #f3f2ef;
+  color: #4a4a4a;
+  background-color: #ffeef4;
 }
 
 h1, h2, h3 {
   font-weight: 600;
+  color: #d63384;
 }
 
 a {
-  color: #0a66c2;
+  color: #cc4c8b;
   text-decoration: none;
 }
 
 .profile-container {
   max-width: 700px;
   margin: 10px auto;
-  background: white;
+  background: #fff0f5;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(220, 150, 190, 0.2);
   position: relative;
 }
 
@@ -32,6 +31,7 @@ a {
   background-image: url('bg.png');
   background-size: cover;
   background-position: center;
+  background-color: #ffd3e2;
 }
 
 .profile-photo-wrapper {
@@ -43,7 +43,7 @@ a {
   border-radius: 50%;
   overflow: hidden;
   border: 4px solid white;
-  box-shadow: 0 0 6px rgba(0,0,0,0.2);
+  box-shadow: 0 0 6px rgba(220, 150, 190, 0.3);
 }
 
 .profile-photo-wrapper img {
@@ -60,15 +60,16 @@ a {
 .header-text h1 {
   margin: 0;
   font-size: 24px;
+  color: #b03060; 
 }
 
 .header-text .subtitle {
-  color: #666;
+  color: #8b6f7d;
   margin: 5px 0;
 }
 
 .header-text a {
-  color: #0073b1;
+  color: #cc4c8b;
   text-decoration: none;
 }
 
@@ -77,24 +78,30 @@ a {
 }
 
 .action-buttons button {
-  background-color: #0a66c2;
+  background-color: #f78fb3; 
   color: white;
   border: none;
   padding: 8px 12px;
   border-radius: 5px;
   margin-right: 10px;
   cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.action-buttons button:hover {
+  background-color: #f368a1;
 }
 
 .content-card {
   margin: 0 30px 20px 30px;
   padding: 20px;
-  background: #fafafa;
+  background: #fff5fa;
   border-radius: 10px;
 }
 
 .content-card h2, .content-card h3 {
   margin-top: 0;
+  color: #b03060;
 }
 
 .content-card ul {
