@@ -1,15 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Login</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(to right, #ffeef4, #fff0f5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-container {
+      background: #fff5fa;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(220, 150, 190, 0.25);
+      text-align: center;
+      width: 320px;
+    }
+
+    .login-container h2 {
+      margin-bottom: 20px;
+      color: #d63384;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      text-align: left;
+      color: #b03060;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #f78fb3;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #f368a1;
+      outline: none;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: linear-gradient(to right, #f78fb3, #f368a1);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(246, 104, 161, 0.3);
+    }
+  </style>
 </head>
 <body>
-  <h2>Login</h2>
-  <form id="loginForm">
-    <label>Username: <input type="text" id="username" required></label><br>
-    <label>Password: <input type="password" id="password" required></label><br>
-    <button type="submit">Login</button>
-  </form>
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <label for="username">Username</label>
+      <input type="text" id="username" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" required>
+
+      <button type="submit">Login</button>
+    </form>
+  </div>
 
   <script src="script.js"></script>
 </body>
