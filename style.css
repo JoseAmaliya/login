@@ -136,10 +136,3 @@ a:hover {
   position: relative;
   padding-left: 15px;
 }
-
-.content-card li::before {
-  content: "💗";
-  position: absolute;
-  left: 0;
-  top: 0;
-}
