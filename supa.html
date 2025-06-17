@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,99 +7,118 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="profile-container">
+<div class="profile-container">
   <div class="header-bg"></div>
 
   <div class="profile-photo-wrapper">
-    <img src="pinguinpng.jpg" alt="profile" class="profile-photo" />
+    <img src="profile.png" alt="profile" class="profile-photo" />
   </div>
 
   <div class="header-text">
     <h1>Jose Amaliya</h1>
     <p class="subtitle">She/Her • Web Developer</p>
-    <p>Bogor, Indonesia • <a href="https://jose.amaliya.com">jose.com</a></p>
-    <p><strong>Laluna</strong> — Universitas</p>
+    <p>Jakarta, Indonesia • <a href="https://wawan.sismadi.com">jsa.com</a></p>
+    <p><strong>Laluna</strong> — Universitas Ipwija</p>
   </div>
 
   <div class="action-buttons">
-    <button>Open to work</button>
-    <button>Add profile section</button>
-    <button>Enhance profile</button>
-  </div>
 
-  <div id="content"  >
 
+    <button id="loginBtn">Login untuk akses data</button>
+<button id="logoutBtn">Logout</button>
 
   </div>
 
-
+  <div id="content"></div>
 
   <div class="content-card">
-    <h3>Sosial Media <small></small></h3>
+    <h3>Sosial Media</h3>
     <ul>
-      <li><strong>linkedin :</strong> http://linkedin.com/in/jose </li>
-      <li><strong>credly :</strong> https://www.credly.com/users/jose-amaliya</li>
+      <li><strong>linkedin :</strong> http://linkedin.com/in/jsa</li>
+      <li><strong>credly :</strong> https://www.credly.com/users/jose-amalya</li>
     </ul>
   </div>
 </div>
 
-
 <script type="module">
-// Import Supabase client dari CDN
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
 
 const SUPABASE_URL = 'https://ljvegfbiuvhcrjjdufhv.supabase.co'
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqdmVnZmJpdXZoY3JqamR1Zmh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDUwNjEsImV4cCI6MjA2Mzk4MTA2MX0.GgUMDvhW44xpsZGBtzTMfsBQd1ROOUbe4QEf_LfMwcI'
 
-
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-// Elemen DOM
-// const addBtn = document.getElementById('addBtn')
-// const dataBody = document.getElementById('dataBody')
-// const crudForm = document.getElementById('crudForm')
-// const recordIdInput = document.getElementById('recordId')
-// const nameInput = document.getElementById('nameInput')
-// const emailInput = document.getElementById('emailInput')
-// const deleteBtn = document.getElementById('deleteBtn')
-// const cancelBtn = document.getElementById('cancelBtn')
-
 const content = document.getElementById('content')
 
-// Fungsi load data ke tabel
+// Coba login manual (bisa diganti pakai form)
+async function login() {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: 'user@example.com', // ganti dengan akun terdaftar
+    password: 'password123'     // ganti sesuai user
+  })
+
+  if (error) {
+    alert('Login gagal: ' + error.message)
+    return
+  }
+
+  loadData()
+}
+
+async function logout() {
+  await supabase.auth.signOut()
+  content.innerHTML = '<p>Logout berhasil.</p>'
+}
+
+// Load data hanya milik user yang login
 async function loadData() {
-  const { data, error } = await supabase.from('web1').select('*').order('id')
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+
+    content.innerHTML = '<p>Silakan login untuk melihat data.</p>'
+    return
+  }
+
+
+
+
+  const { data, error } = await supabase
+    .from('web3')
+    .select('*')
+    .order('id')
+
   if (error) {
     alert('Error loading data: ' + error.message)
     return
   }
-  content.innerHTML = ''
-  let  out=``;
+
+  let out = ''
   data.forEach(row => {
-
-    out+=`
-
-    <div class="content-card">
-    <h2>${row.Judul}</h2>
-    <p>${row.Isi}
-</p>
-
-  </div>
-  `
-
+    out += `
+      <div class="content-card">
+        <h2>${row.judul}</h2>
+        <p>${row.isi}</p>
+         <p>${row.user_id}</p>
+      </div>
+    `
   })
-  content.innerHTML = out
 
+  content.innerHTML = out
 
 }
 
- // Load data saat halaman siap
-window.addEventListener('DOMContentLoaded', loadData)
 
+document.getElementById('loginBtn').addEventListener('click', login)
+document.getElementById('logoutBtn').addEventListener('click', logout)
+
+
+window.addEventListener('DOMContentLoaded', async () => {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (user) loadData()
+})
 </script>
-
-
 
 </body>
 </html>
