@@ -1,11 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+  <meta charset="UTF-8">
   <title>Home</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(to right, #ffeef4, #fff0f5);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #4a4a4a;
+    }
+
+    .home-container {
+      text-align: center;
+      background: #fff5fa;
+      padding: 40px 50px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(220, 150, 190, 0.2);
+    }
+
+    #welcome {
+      font-size: 24px;
+      color: #d63384;
+      margin-bottom: 30px;
+    }
+
+    button {
+      background: linear-gradient(to right, #f78fb3, #f368a1);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      font-weight: 600;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(246, 104, 161, 0.3);
+    }
+  </style>
 </head>
 <body>
-  <h2 id="welcome">Selamat datang!</h2>
-  <button onclick="logout()">Logout</button>
+  <div class="home-container">
+    <h2 id="welcome">Selamat datang!</h2>
+    <button onclick="logout()">Logout</button>
+  </div>
 
   <script src="script.js"></script>
   <script>
