@@ -89,4 +89,19 @@
 
   <script src="script.js"></script>
 </body>
+  <script type="module">
+import { login, checkSession } from './script.js'
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault()
+  const email = document.getElementById('username').value
+  const password = document.getElementById('password').value
+  await login(email, password)
+})
+
+// Jika sudah login, langsung ke home
+checkSession().then(user => {
+  if (user) window.location.href = 'home.html'
+})
+</script>
 </html>
