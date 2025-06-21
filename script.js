@@ -52,39 +52,9 @@ function checkSession() {
     window.location.href = 'login.html';
   }
 }
-
 // Logout
 function logout() {
   sessionStorage.removeItem('session');
   deleteCookie('session_user');
   window.location.href = 'login.html';
-}
-
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
-const SUPABASE_URL = 'https://ljvegfbiuvhcrjjdufhv.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOi...'
-
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-export async function checkSession(redirectIfNotLoggedIn = false) {
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user && redirectIfNotLoggedIn) {
-    window.location.href = 'login.html'
-  }
-  return user
-}
-
-export async function login(email, password) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-  if (error) {
-    alert('Login gagal: ' + error.message)
-  } else {
-    window.location.href = 'home.html'
-  }
-}
-
-export async function logout() {
-  await supabase.auth.signOut()
-  window.location.href = 'login.html'
 }
