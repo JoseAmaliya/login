@@ -64,5 +64,12 @@
   <script>
     checkSession();
   </script>
+  <script type="module">
+import { checkSession, logout } from './script.js'
+
+checkSession(true) // Redirect ke login jika belum login
+
+window.logout = logout
+</script>
 </body>
 </html>
