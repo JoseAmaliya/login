@@ -57,8 +57,8 @@
     data.forEach(item => {
       html += `
         <div class="card">
-          <h3>${item.Judul || '(judul)'}</h3>
-          <p>${item.Isi || '(isi)'}</p>
+          <h3>${item.Judul || '(item.judul)'}</h3>
+          <p>${item.Isi || '(item.isi)'}</p>
           <small>User ID: ${item.user_id ?? '-'}</small>
         </div>
       `
