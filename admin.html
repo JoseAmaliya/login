@@ -1,21 +1,42 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Login Sederhana - LocalStorage</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login Supabase</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+    .login-box {
+      max-width: 300px;
+      margin: auto;
+      border: 1px solid #ccc;
+      padding: 20px;
+    }
+    label, input {
+      display: block;
+      margin-top: 10px;
+    }
+    button {
+      margin-top: 15px;
+    }
+    #welcomeBox {
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
 
 <div class="login-box" id="loginBox">
   <h2>Login</h2>
   <form id="loginForm">
-    <label>Username:
-      <input type="text" id="username" required>
+    <label>Email:
+      <input type="email" id="username" required />
     </label>
     <label>Password:
-      <input type="password" id="password" required>
+      <input type="password" id="password" required />
     </label>
     <button type="submit">Login</button>
   </form>
@@ -23,55 +44,61 @@
 
 <div class="login-box" id="welcomeBox" style="display: none;">
   <h2 id="welcome">Halo, User!</h2>
+  <button id="toAdmin">Ke Halaman Admin</button>
   <button onclick="logout()">Logout</button>
-  <button id="backBtn">Kembali ke Halaman Utama</button>
 </div>
-  
-  <script>
-  document.getElementById('backBtn').addEventListener('click', () => {
+
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+  const SUPABASE_URL = 'https://ljvegfbiuvhcrjjdufhv.supabase.co'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+  const loginBox = document.getElementById('loginBox')
+  const welcomeBox = document.getElementById('welcomeBox')
+  const welcomeText = document.getElementById('welcome')
+  const loginForm = document.getElementById('loginForm')
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const email = document.getElementById('username').value.trim()
+    const password = document.getElementById('password').value.trim()
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
+
+    if (error) {
+      alert('Login gagal: ' + error.message)
+      return
+    }
+
+    loginBox.style.display = 'none'
+    welcomeBox.style.display = 'block'
+    welcomeText.textContent = `Halo, ${data.user.email}!`
+  })
+
+  document.getElementById('toAdmin').addEventListener('click', () => {
     window.location.href = 'supa.html'
   })
-</script>
 
-<script>
-  // Simulasi user login (hardcoded)
-  const users = {
-    admin: '12345',
-    user: 'pass'
-  };
-
-  // Cek apakah user sudah login
-  function checkLogin() {
-    const session = localStorage.getItem('sessionUser');
-    if (session) {
-      document.getElementById('loginBox').style.display = 'none';
-      document.getElementById('welcomeBox').style.display = 'block';
-      document.getElementById('welcome').innerText = `Halo, ${session}!`;
-    }
+  window.logout = async function () {
+    await supabase.auth.signOut()
+    location.reload()
   }
 
-  // Tangani login
-  document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const uname = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value.trim();
-
-    if (users[uname] && users[uname] === pass) {
-      localStorage.setItem('sessionUser', uname);
-      checkLogin();
-    } else {
-      alert('Username atau password salah!');
+  // Jika user sudah login sebelumnya
+  window.addEventListener('DOMContentLoaded', async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      loginBox.style.display = 'none'
+      welcomeBox.style.display = 'block'
+      welcomeText.textContent = `Halo, ${user.email}!`
     }
-  });
-
-  // Logout
-  function logout() {
-    localStorage.removeItem('sessionUser');
-    location.reload();
-  }
-
-  // Jalankan saat pertama dimuat
-  checkLogin();
+  })
 </script>
 
 </body>
