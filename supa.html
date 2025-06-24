@@ -22,12 +22,9 @@
   </div>
 
   <div class="action-buttons">
-
-
     <button id="loginBtn">Login untuk akses data</button>
-<button id="logoutBtn">Logout</button>
+    <button id="logoutBtn">Logout</button>
     <button id="adminBtn">Admin</button>
-
   </div>
 
   <div id="content"></div>
@@ -50,11 +47,12 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 const content = document.getElementById('content')
 
-// Coba login manual (bisa diganti pakai form)
+let currentUser = null
+
 async function login() {
   const { data, error } = await supabase.auth.signInWithPassword({
-    email: 'user@example.com', // ganti dengan akun terdaftar
-    password: 'password123'     // ganti sesuai user
+    email: 'user@example.com', // ganti dengan akun user yang valid
+    password: 'password123'
   })
 
   if (error) {
@@ -70,28 +68,23 @@ async function logout() {
   content.innerHTML = '<p>Logout berhasil.</p>'
 }
 
-// Load data hanya milik user yang login
+// Load data pengguna yang login
 async function loadData() {
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-
+  const { data: { user }, error } = await supabase.auth.getUser()
+  if (error || !user) {
     content.innerHTML = '<p>Silakan login untuk melihat data.</p>'
     return
   }
 
+  currentUser = user
 
-
-
-  const { data, error } = await supabase
+  const { data, error: dataError } = await supabase
     .from('web3')
     .select('*')
     .order('id')
 
-  if (error) {
-    alert('Error loading data: ' + error.message)
+  if (dataError) {
+    alert('Error loading data: ' + dataError.message)
     return
   }
 
@@ -101,23 +94,44 @@ async function loadData() {
       <div class="content-card">
         <h2>${row.judul}</h2>
         <p>${row.isi}</p>
-         <p>${row.user_id}</p>
+        <p>User ID: ${row.user_id}</p>
       </div>
     `
   })
 
   content.innerHTML = out
-
 }
 
+// Akses admin jika user memiliki email tertentu
+async function goToAdmin() {
+  const { data: { user }, error } = await supabase.auth.getUser()
 
+  if (error || !user) {
+    alert('Silakan login terlebih dahulu.')
+    return
+  }
+
+  // Ganti email ini dengan email admin yang diizinkan
+  const adminEmails = ['admin@example.com', 'jose@example.com']
+
+  if (adminEmails.includes(user.email)) {
+    window.location.href = 'admin.html' // redirect ke halaman admin
+  } else {
+    alert('Anda bukan admin.')
+  }
+}
+
+// Tombol Event
 document.getElementById('loginBtn').addEventListener('click', login)
 document.getElementById('logoutBtn').addEventListener('click', logout)
-
+document.getElementById('adminBtn').addEventListener('click', goToAdmin)
 
 window.addEventListener('DOMContentLoaded', async () => {
   const { data: { user } } = await supabase.auth.getUser()
-  if (user) loadData()
+  if (user) {
+    currentUser = user
+    loadData()
+  }
 })
 </script>
 
