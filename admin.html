@@ -11,13 +11,14 @@
     th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
     tr:hover { background-color: #f9f9f9; cursor: pointer; }
     button { margin-right: 10px; }
-    #addBtn { margin-bottom: 15px; }
+    #addBtn, #logoutBtn { margin-bottom: 15px; }
   </style>
 </head>
 <body>
 
 <h2>CRUD Sederhana dengan Supabase & User ID</h2>
 <button id="addBtn">Tambah</button>
+<button id="logoutBtn">Logout</button>
 
 <table>
   <thead>
@@ -50,24 +51,20 @@ const SUPABASE_URL = 'https://ljvegfbiuvhcrjjdufhv.supabase.co'
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqdmVnZmJpdXZoY3JqamR1Zmh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDUwNjEsImV4cCI6MjA2Mzk4MTA2MX0.GgUMDvhW44xpsZGBtzTMfsBQd1ROOUbe4QEf_LfMwcI'
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-// Dummy login (untuk demo)
-await supabase.auth.signInWithPassword({
-  email: 'test@example.com',
-  password: 'yourpassword123'
-})
-
 let currentUser = null
 
 async function getCurrentUser() {
   const { data, error } = await supabase.auth.getUser()
-  if (error) {
-    alert('Gagal mengambil user: ' + error.message)
+  if (error || !data.user) {
+    // Jika user tidak login, redirect ke supa.html
+    window.location.href = "supa.html"
     return
   }
   currentUser = data.user
 }
 
 const addBtn = document.getElementById('addBtn')
+const logoutBtn = document.getElementById('logoutBtn')
 const dataBody = document.getElementById('dataBody')
 const crudForm = document.getElementById('crudForm')
 const recordIdInput = document.getElementById('recordId')
@@ -151,14 +148,22 @@ async function deleteData() {
   loadData()
 }
 
+async function logout() {
+  await supabase.auth.signOut()
+  window.location.href = "supa.html" // Redirect ke halaman login setelah logout
+}
+
 addBtn.addEventListener('click', () => showForm(null))
 crudForm.addEventListener('submit', saveData)
 deleteBtn.addEventListener('click', deleteData)
 cancelBtn.addEventListener('click', hideForm)
+logoutBtn.addEventListener('click', logout)
 
 window.addEventListener('DOMContentLoaded', async () => {
   await getCurrentUser()
-  loadData()
+  if (currentUser) {
+    loadData()
+  }
 })
 </script>
 
