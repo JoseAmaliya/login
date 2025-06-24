@@ -43,8 +43,10 @@
 
   <script>
 document.getElementById('adminBtn').addEventListener('click', () => {
-  // Langsung arahkan ke halaman admin.html tanpa login
-  window.location.href = 'admin.html'
+  const konfirmasi = confirm("Yakin ingin membuka halaman admin?")
+  if (konfirmasi) {
+    window.location.href = 'admin.html'
+  }
 })
 </script>
 
