@@ -2,102 +2,68 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login Supabase</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Supabase Akses</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 30px;
-    }
-    .login-box {
-      max-width: 300px;
-      margin: auto;
-      border: 1px solid #ccc;
       padding: 20px;
     }
-    label, input {
-      display: block;
-      margin-top: 10px;
+    .card {
+      border: 1px solid #ccc;
+      margin-bottom: 12px;
+      padding: 10px;
+      border-radius: 6px;
     }
-    button {
-      margin-top: 15px;
-    }
-    #welcomeBox {
-      text-align: center;
+    #adminData {
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
-<div class="login-box" id="loginBox">
-  <h2>Login</h2>
-  <form id="loginForm">
-    <label>Email:
-      <input type="email" id="username" required />
-    </label>
-    <label>Password:
-      <input type="password" id="password" required />
-    </label>
-    <button type="submit">Login</button>
-  </form>
-</div>
+<h2>Selamat Datang</h2>
+<p>Halaman ini tidak menggunakan login. Klik tombol berikut untuk menampilkan data dari Supabase:</p>
 
-<div class="login-box" id="welcomeBox" style="display: none;">
-  <h2 id="welcome">Halo, User!</h2>
-  <button id="toAdmin">Ke Halaman Admin</button>
-  <button onclick="logout()">Logout</button>
-</div>
+<button id="adminBtn">Tampilkan Data Admin</button>
+
+<div id="adminData"></div>
 
 <script type="module">
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
   const SUPABASE_URL = 'https://ljvegfbiuvhcrjjdufhv.supabase.co'
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqdmVnZmJpdXZoY3JqamR1Zmh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDUwNjEsImV4cCI6MjA2Mzk4MTA2MX0.GgUMDvhW44xpsZGBtzTMfsBQd1ROOUbe4QEf_LfMwcI'
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-  const loginBox = document.getElementById('loginBox')
-  const welcomeBox = document.getElementById('welcomeBox')
-  const welcomeText = document.getElementById('welcome')
-  const loginForm = document.getElementById('loginForm')
+  const adminBtn = document.getElementById('adminBtn')
+  const adminData = document.getElementById('adminData')
 
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault()
-    const email = document.getElementById('username').value.trim()
-    const password = document.getElementById('password').value.trim()
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    })
+  adminBtn.addEventListener('click', async () => {
+    const { data, error } = await supabase.from('web3').select('*').order('id')
 
     if (error) {
-      alert('Login gagal: ' + error.message)
+      adminData.innerHTML = `<p style="color:red;">Gagal memuat data: ${error.message}</p>`
       return
     }
 
-    loginBox.style.display = 'none'
-    welcomeBox.style.display = 'block'
-    welcomeText.textContent = `Halo, ${data.user.email}!`
-  })
-
-  document.getElementById('toAdmin').addEventListener('click', () => {
-    window.location.href = 'supa.html'
-  })
-
-  window.logout = async function () {
-    await supabase.auth.signOut()
-    location.reload()
-  }
-
-  // Jika user sudah login sebelumnya
-  window.addEventListener('DOMContentLoaded', async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      loginBox.style.display = 'none'
-      welcomeBox.style.display = 'block'
-      welcomeText.textContent = `Halo, ${user.email}!`
+    if (data.length === 0) {
+      adminData.innerHTML = '<p>Data kosong.</p>'
+      return
     }
+
+    let html = ''
+    data.forEach(item => {
+      html += `
+        <div class="card">
+          <h3>${item.Judul || '(judul)'}</h3>
+          <p>${item.Isi || '(isi)'}</p>
+          <small>User ID: ${item.user_id ?? '-'}</small>
+        </div>
+      `
+    })
+    adminData.innerHTML = html
   })
 </script>
 
